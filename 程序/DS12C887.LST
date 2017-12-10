@@ -1,0 +1,483 @@
+C51 COMPILER V8.02   DS12C887                                                              01/21/2016 18:33:52 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE DS12C887
+OBJECT MODULE PLACED IN DS12C887.OBJ
+COMPILER INVOKED BY: I:\Install\Keil\C51\BIN\C51.EXE DS12C887.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h>
+   2          #include<intrins.h>
+   3          #define uint unsigned int
+   4          #define uchar unsigned char
+   5          sbit lcdrs=P2^4;
+   6          sbit lcden=P2^6;
+   7          sbit s1=P3^0;  //功能键
+   8          sbit s2=P3^1;  //增大键
+   9          sbit s3=P3^2;  //减小键
+  10          sbit s4=P3^6;  //闹铃查看键
+  11          sbit beep=P2^3;//蜂鸣器
+  12          sbit dscs=P1^4;
+  13          sbit dsas=P1^5;
+  14          sbit dsrw=P1^6;
+  15          sbit dsds=P1^7;
+  16          sbit dsirq=P3^3; //中断
+  17          bit flag1,flag_ri;//定义标志位    flag1设置闹铃
+  18          uchar count,s1num,flag,t0_num;
+  19          char miao,shi,fen,year,month,day,week,amiao,afen,ashi;
+  20          char code table[]=" 20  -  -  ";  //   20  -  -     
+  21          uchar code table1[]="      :  :  ";   //       :  :  
+  22          void write_ds(uchar,uchar); uchar read_ds(uchar);void set_time();
+  23          void read_alarm();void set_alarm(uchar,uchar,uchar); 
+  24          void delayms(uint z)            //延时毫秒的程序
+  25          {
+  26   1              uint x,y;
+  27   1              for(x=z;x>0;x--)
+  28   1              for(y=112;y>0;y--);
+  29   1      }
+  30          void di()
+  31          {
+  32   1              beep=0;
+  33   1              delayms(100);
+  34   1              beep=1;
+  35   1      }
+  36          void write_cmd(uchar cmd)
+  37          {
+  38   1              lcden=0;
+  39   1              lcdrs=0;
+  40   1              P0=cmd;
+  41   1              _nop_();
+  42   1              lcden=1;
+  43   1              delayms(1);
+  44   1              lcden=0;
+  45   1          _nop_();
+  46   1      }
+  47          void write_dat(uchar dat)
+  48          {
+  49   1              lcden=0;
+  50   1              lcdrs=1;
+  51   1              P0=dat;
+  52   1          _nop_();
+  53   1              lcden=1;
+  54   1              delayms(1);
+  55   1              lcden=0;
+C51 COMPILER V8.02   DS12C887                                                              01/21/2016 18:33:52 PAGE 2   
+
+  56   1              _nop_();
+  57   1      }
+  58          void lcdint()
+  59          {
+  60   1              lcden=0;
+  61   1              write_cmd(0x38);   // 显示模式设置      
+  62   1              write_cmd(0x0c);   //开显示，不显示光标，不闪烁
+  63   1              write_cmd(0x06);   //写一个字符后地址加1，屏幕不移
+  64   1              write_cmd(0x01);        //清屏
+  65   1              delayms(1);
+  66   1      }
+  67          void init()
+  68          {
+  69   1              uchar num;
+  70   1              EA=1;//开总中断
+  71   1              EX1=1;//开外部中断1
+  72   1              IT1=1;//外部中断下降沿触发
+  73   1              flag1=0; t0_num=0;s1num=0;week=1;
+  74   1              write_ds(0x0A,0x20);//打开振荡器
+  75   1              write_ds(0x0B,0x26);//设置24小时模式，数据二进制格式，开启闹铃中断
+  76   1              set_time();//设置上电默认时间,调试的时候用
+  77   1              lcdint();
+  78   1              write_cmd(0x80);
+  79   1              for(num=0;num<15;num++)
+  80   1                      {
+  81   2                              write_dat(table[num]);
+  82   2                      }
+  83   1              write_cmd(0xc0);
+  84   1              for(num=0;num<11;num++)
+  85   1                      {
+  86   2                              write_dat(table1[num]);
+  87   2                      }
+  88   1      }
+  89          void write_sfm(uchar add,char date)              //写时间,2位一起写
+  90          {
+  91   1              char shi,ge;
+  92   1              shi=date/10;ge=date%10;
+  93   1              write_cmd(0xc0+add);
+  94   1              write_dat(0x30+shi);
+  95   1              write_dat(0x30+ge);             
+  96   1      }       
+  97          void write_nyr(uchar add,char date)//年月日
+  98          {
+  99   1              char shi,ge;
+ 100   1              shi=date/10;ge=date%10;
+ 101   1              write_cmd(0x80+add);
+ 102   1              write_dat(0x30+shi);
+ 103   1              write_dat(0x30+ge);
+ 104   1      }
+ 105          void write_week(char we)//星期
+ 106          {
+ 107   1              write_cmd(0x80+12);
+ 108   1              switch(we)
+ 109   1              {
+ 110   2                      case 1: write_dat('M');write_dat('O');write_dat('N');break;
+ 111   2                      case 2: write_dat('T');write_dat('U');write_dat('E');break;
+ 112   2                      case 3: write_dat('W');write_dat('E');write_dat('D');break;
+ 113   2                      case 4: write_dat('T');write_dat('H');write_dat('U');break;
+ 114   2                      case 5: write_dat('F');write_dat('R');write_dat('I');break;
+ 115   2                      case 6: write_dat('S');write_dat('A');write_dat('T');break;
+ 116   2                      case 7: write_dat('S');write_dat('U');write_dat('N');break;
+ 117   2              }
+C51 COMPILER V8.02   DS12C887                                                              01/21/2016 18:33:52 PAGE 3   
+
+ 118   1      }
+ 119          void keyscan()
+ 120          {
+ 121   1              if(flag_ri==1)
+ 122   1              {
+ 123   2                      if((s1==0)||(s2==0)||(s3==0)||(s4==0))//按任意键取消闹钟报警
+ 124   2                      {
+ 125   3                              delayms(5);
+ 126   3                              if((s1==0)||(s2==0)||(s3==0)||(s4==0))
+ 127   3                              {
+ 128   4                                      while(!(s1&&s2&&s3&&s4));di();
+ 129   4                                      flag_ri=0;
+ 130   4                              }
+ 131   3                      }
+ 132   2              }       
+ 133   1              if(s1==0)                         //如果功能按键1按下
+ 134   1              {
+ 135   2                      delayms(5);                //去抖动
+ 136   2                      if(s1==0)
+ 137   2                      {                       
+ 138   3                              while(!s1);               //等待松手
+ 139   3                              s1num++;                        //记下次数
+ 140   3                              di();                     //蜂鸣器响
+ 141   3                              if(flag1==1)      //设置闹铃为1时才对s1num调整，只调秒，分，时
+ 142   3                              {
+ 143   4                                      if(s1num>3)     
+ 144   4                                      {
+ 145   5                                              s1num=1;
+ 146   5                                      }
+ 147   4                              }
+ 148   3                              flag=1;         //在调整时间时标志位flag为1，不进行正常操作
+ 149   3                              switch(s1num)
+ 150   3                              {
+ 151   4                                      case 1:write_cmd(0xc0+10); write_cmd(0x0f);     break;  //按一下秒钟 指针显示闪烁
+ 152   4                                      case 2:write_cmd(0xc0+7); break;
+ 153   4                                      case 3:write_cmd(0xc0+4); break;
+ 154   4                                      case 4:write_cmd(0x80+12); break;
+ 155   4                                      case 5:write_cmd(0x80+9); break;
+ 156   4                                      case 6:write_cmd(0x80+6); break;
+ 157   4                                      case 7:write_cmd(0x80+3); break;
+ 158   4                                      default:                         //用default可以解决s1num跑飞
+ 159   4                                              s1num=0;
+ 160   4                                              write_cmd(0x0c);  //按了8次关闪烁，flag=0,退出调整，显示时间
+ 161   4                                              flag=0;
+ 162   4                                              write_ds(0,miao);  //将调整后的时间写入ds12c887
+ 163   4                                              write_ds(2,fen);
+ 164   4                                              write_ds(4,shi);
+ 165   4                                              write_ds(6,week);
+ 166   4                                              write_ds(7,day);
+ 167   4                                              write_ds(8,month);
+ 168   4                                              write_ds(9,year);
+ 169   4                                              break;
+ 170   4      
+ 171   4                              }
+ 172   3                      }
+ 173   2              }
+ 174   1              if(s1num!=0)    //S1有按下过，检测S2，S3
+ 175   1              {
+ 176   2                      if(s2==0)               //如果按键2按下执行加
+ 177   2                      {
+ 178   3                              delayms(5);
+ 179   3                              if(s2==0)
+C51 COMPILER V8.02   DS12C887                                                              01/21/2016 18:33:52 PAGE 4   
+
+ 180   3                              {
+ 181   4                                      while(!s2);di();
+ 182   4                                      switch(s1num)
+ 183   4                                      {
+ 184   5                                              case 1:
+ 185   5                                                      miao++;
+ 186   5                                                      if(miao>59)
+ 187   5                                                      {
+ 188   6                                                              miao=0;
+ 189   6                                                      }
+ 190   5                                                      write_sfm(10,miao);
+ 191   5                                                      write_cmd(0x80+0x40+10);
+ 192   5                                                      break;  
+ 193   5                                              case 2:
+ 194   5                                                      fen++;
+ 195   5                                                      if(fen>59)
+ 196   5                                                      {
+ 197   6                                                              fen=0;
+ 198   6                                                      }
+ 199   5                                                      write_sfm(7,fen);
+ 200   5                                                      write_cmd(0x80+0x40+7);
+ 201   5                                                      break; 
+ 202   5                                              case 3:
+ 203   5                                                      shi++;
+ 204   5                                                      if(shi>23)
+ 205   5                                                      {
+ 206   6                                                              shi=0;
+ 207   6                                                      }
+ 208   5                                                      write_sfm(4,shi);
+ 209   5                                                      write_cmd(0x80+0x40+4);
+ 210   5                                                      break; 
+ 211   5                                              case 4:
+ 212   5                                                      week++;
+ 213   5                                                      if(week>7)
+ 214   5                                                      {
+ 215   6                                                              week=1;
+ 216   6                                                      }
+ 217   5                                                      write_week(week);
+ 218   5                                                      write_cmd(0x80+12);
+ 219   5                                                      break; 
+ 220   5                                              case 5:
+ 221   5                                                      day++;
+ 222   5                                                      if(day>31)
+ 223   5                                                      {
+ 224   6                                                              day=1;
+ 225   6                                                      }
+ 226   5                                                      write_nyr(9,day);
+ 227   5                                                      write_cmd(0x80+9);
+ 228   5                                                      break; 
+ 229   5                                              case 6:
+ 230   5                                                      month++;
+ 231   5                                                      if(month>12)
+ 232   5                                                      {
+ 233   6                                                              month=1;
+ 234   6                                                      }
+ 235   5                                                      write_nyr(6,month);
+ 236   5                                                      write_cmd(0x80+6);
+ 237   5                                                      break; 
+ 238   5                                              case 7:
+ 239   5                                                      year++;
+ 240   5                                                      if(year>99)
+ 241   5                                                      {
+C51 COMPILER V8.02   DS12C887                                                              01/21/2016 18:33:52 PAGE 5   
+
+ 242   6                                                              year=0;
+ 243   6                                                      }
+ 244   5                                                      write_nyr(3,year);
+ 245   5                                                      write_cmd(0x80+3);
+ 246   5                                                      break; 
+ 247   5                                              }
+ 248   4                                      }
+ 249   3                              }
+ 250   2                      if(s3==0)
+ 251   2                      {
+ 252   3                              delayms(5);
+ 253   3                              if(s3==0)
+ 254   3                              {
+ 255   4                                      while(!s3);di();
+ 256   4                                      switch(s1num)
+ 257   4                                      {
+ 258   5                                              case 1:
+ 259   5                                                      miao--;
+ 260   5                                                      if(miao<0)
+ 261   5                                                      {
+ 262   6                                                              miao=59;
+ 263   6                                                      }
+ 264   5                                                      write_sfm(10,miao);
+ 265   5                                                      write_cmd(0x80+0x40+10);
+ 266   5                                                      break;  
+ 267   5                                              case 2:
+ 268   5                                                      fen--;
+ 269   5                                                      if(fen<0)
+ 270   5                                                      {
+ 271   6                                                              fen=59;
+ 272   6                                                      }
+ 273   5                                                      write_sfm(7,fen);
+ 274   5                                                      write_cmd(0x80+0x40+7);
+ 275   5                                                      break; 
+ 276   5                                              case 3:
+ 277   5                                                      shi--;
+ 278   5                                                      if(shi<0)
+ 279   5                                                      {
+ 280   6                                                              shi=23;
+ 281   6                                                      }
+ 282   5                                                      write_sfm(4,shi);
+ 283   5                                                      write_cmd(0x80+0x40+4);
+ 284   5                                                      break; 
+ 285   5                                              case 4:
+ 286   5                                                      week--;
+ 287   5                                                      if(week<1)
+ 288   5                                                      {
+ 289   6                                                              week=7;
+ 290   6                                                      }
+ 291   5                                                      write_week(week);
+ 292   5                                                      write_cmd(0x80+12);
+ 293   5                                                      break; 
+ 294   5                                              case 5:
+ 295   5                                                      day--;
+ 296   5                                                      if(day<1)
+ 297   5                                                      {
+ 298   6                                                              day=31;
+ 299   6                                                      }
+ 300   5                                                      write_nyr(9,day);
+ 301   5                                                      write_cmd(0x80+9);
+ 302   5                                                      break; 
+ 303   5                                              case 6:
+C51 COMPILER V8.02   DS12C887                                                              01/21/2016 18:33:52 PAGE 6   
+
+ 304   5                                                      month--;
+ 305   5                                                      if(month<1)
+ 306   5                                                      {
+ 307   6                                                              month=12;
+ 308   6                                                      }
+ 309   5                                                      write_nyr(6,month);
+ 310   5                                                      write_cmd(0x80+6);
+ 311   5                                                      break; 
+ 312   5                                              case 7:
+ 313   5                                                      year--;
+ 314   5                                                      if(year<0)
+ 315   5                                                      {
+ 316   6                                                              year=99;
+ 317   6                                                      }
+ 318   5                                                      write_nyr(3,year);
+ 319   5                                                      write_cmd(0x80+3);
+ 320   5                                                      break; 
+ 321   5                                              }                               
+ 322   4                                 }
+ 323   3                      }
+ 324   2                      }
+ 325   1                      if(s4==0)
+ 326   1                      {
+ 327   2                              delayms(5);
+ 328   2                              if(s4==0)
+ 329   2                              {
+ 330   3                                      while(!s4);di(); flag1=~flag1;  //闹铃调好后再按一次键返回
+ 331   3                                      if(flag1==0)   //退出闹钟设置保存数值
+ 332   3                                      {
+ 333   4                                              flag=0;    //启动时间显示
+ 334   4                                              write_cmd(0x80+0x40);
+ 335   4                                              write_dat(' ');
+ 336   4                                              write_dat(' ');
+ 337   4                                              write_cmd(0x0c);  //清屏下，否则光标乱跳   （闹铃调时间时）
+ 338   4                                              write_ds(1,miao);
+ 339   4                                              write_ds(3,fen);
+ 340   4                                              write_ds(5,shi);
+ 341   4                                      }
+ 342   3                                      else  //设置闹钟
+ 343   3                                      {
+ 344   4                                              read_alarm();  //读原始数据
+ 345   4                                              miao=amiao;
+ 346   4                                              fen=afen;
+ 347   4                                              shi=ashi;
+ 348   4                                              write_cmd(0xc0);
+ 349   4                                              write_dat('R');write_dat('i');
+ 350   4                                              write_cmd(0x80+0x40);
+ 351   4                                              write_sfm(4,ashi);
+ 352   4                                              write_sfm(7,afen);      
+ 353   4                                              write_sfm(10,amiao);            
+ 354   4                                      }                       
+ 355   3                              }
+ 356   2                      }
+ 357   1      }
+ 358          void write_ds(uchar add,uchar date)//写12c887函数
+ 359          {
+ 360   1              dscs=0;
+ 361   1              dsas=1;
+ 362   1              dsds=1;
+ 363   1              dsrw=1;
+ 364   1              P0=add;  //写地址
+ 365   1              dsas=0;
+C51 COMPILER V8.02   DS12C887                                                              01/21/2016 18:33:52 PAGE 7   
+
+ 366   1              dsrw=0;
+ 367   1              P0=date;  //写数据
+ 368   1              dsrw=1;
+ 369   1              dsas=1;
+ 370   1              dscs=1; 
+ 371   1      }
+ 372          uchar read_ds(uchar add) //读12c887
+ 373          {
+ 374   1              uchar ds_date;
+ 375   1              dsas=1;
+ 376   1              dsds=1;
+ 377   1              dsrw=1;
+ 378   1              dscs=0;
+ 379   1              P0=add;
+ 380   1              dsas=0;
+ 381   1              dsds=0;
+ 382   1              P0=0xff;
+ 383   1              ds_date=P0;
+ 384   1              dsds=1;
+ 385   1              dsas=1;
+ 386   1              dscs=1;
+ 387   1              return ds_date; 
+ 388   1      }
+ 389          void set_time()  //初始化
+ 390          {
+ 391   1              write_ds(0,0);  //秒
+ 392   1              write_ds(1,10); //秒闹铃
+ 393   1              write_ds(2,34); //分钟  
+ 394   1              write_ds(3,34); //分钟闹铃
+ 395   1              write_ds(4,15); //小时
+ 396   1              write_ds(5,15); //小时闹铃
+ 397   1              write_ds(6,5);  //星期
+ 398   1              write_ds(7,20); //日
+ 399   1              write_ds(8,5);  //月
+ 400   1              write_ds(9,11); //年
+ 401   1      } 
+ 402          void read_alarm()
+ 403          {
+ 404   1              amiao=read_ds(1);
+ 405   1              afen=read_ds(3);
+ 406   1              ashi=read_ds(5);
+ 407   1      }
+ 408          void main()
+ 409          {
+ 410   1              init();
+ 411   1              while(1)
+ 412   1              {
+ 413   2                      keyscan();         //键盘不断扫描       
+ 414   2                      if(flag_ri==1)    //如果闹铃时间到
+ 415   2                      {
+ 416   3                              di();
+ 417   3                              delayms(100);
+ 418   3                              di();
+ 419   3                              delayms(500);
+ 420   3                      }
+ 421   2                      if(flag==0&&flag1==0)
+ 422   2                      {
+ 423   3                              keyscan();
+ 424   3                              year=read_ds(9);
+ 425   3                              month=read_ds(8);
+ 426   3                              day=read_ds(7);
+ 427   3                              week=read_ds(6);
+C51 COMPILER V8.02   DS12C887                                                              01/21/2016 18:33:52 PAGE 8   
+
+ 428   3                              shi=read_ds(4);
+ 429   3                              fen=read_ds(2);
+ 430   3                              miao=read_ds(0);
+ 431   3                              write_sfm(10,miao);
+ 432   3                              write_sfm(7,fen);
+ 433   3                              write_sfm(4,shi);
+ 434   3                              write_week(week);
+ 435   3                              write_nyr(3,year);
+ 436   3                              write_nyr(6,month);
+ 437   3                              write_nyr(9,day);
+ 438   3                      }       
+ 439   2              } 
+ 440   1      }
+ 441          void exter()interrupt 2    //闹铃外部中断1
+ 442          {
+ 443   1              uchar c;         //闹铃时间到
+ 444   1              flag_ri=1;
+ 445   1              c=read_ds(0x0c);   //读C寄存器表示响应中断
+ 446   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1507    ----
+   CONSTANT SIZE    =     25    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

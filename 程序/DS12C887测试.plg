@@ -1,0 +1,248 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+C:\Users\Administrator\Desktop\电子钟\程序\DS12C887测试.uv2
+Project File Date:  01/21/2016
+
+<h2>Output:</h2>
+编译 DS12C887.c ...
+DS12C887.c - 0 个错误, 0 个警告。
+创建目标 '目标 1'
+编译 DS12C887.c ...
+连接 ...
+Program Size: data=24.2 xdata=0 code=1584
+创建 HEX 文件 "DS12C887测试" ...
+"DS12C887测试" - 0 个错误, 0 个警告。
+编译 DS12C887.c ...
+DS12C887.C(6): 错误 C141: syntax error near 'com', expected ')'
+DS12C887.C(7): 错误 C141: syntax error near 'date', expected ')'
+DS12C887.C(8): 错误 C141: syntax error near 'add', expected ')'
+DS12C887.C(9): 错误 C141: syntax error near 'add', expected ')'
+DS12C887.C(10): 错误 C141: syntax error near 'date', expected ')'
+DS12C887.C(11): 错误 C141: syntax error near 'date', expected ')'
+DS12C887.C(12): 错误 C141: syntax error near 'add', expected ')'
+DS12C887.C(13): 错误 C129: missing ';' before 'read_ds'
+DS12C887.c(73): 警告 C318: can't open file 'define.h'
+DS12C887.c(74): 警告 C318: can't open file '1602.h'
+DS12C887.c(75): 警告 C318: can't open file 'keyscan.h'
+DS12C887.c(76): 警告 C318: can't open file 'ds18b20.h'
+DS12C887.c - 8 个错误, 4 个警告。
+编译 DS12C887.c ...
+DS12C887.C(28): 错误 C202: 'P1': undefined identifier
+DS12C887.C(29): 错误 C202: 'P1': undefined identifier
+DS12C887.C(30): 错误 C202: 'P1': undefined identifier
+DS12C887.C(31): 错误 C202: 'P1': undefined identifier
+DS12C887.C(32): 错误 C202: 'P3': undefined identifier
+DS12C887.C(34): 错误 C202: 'P3': undefined identifier
+DS12C887.C(35): 错误 C202: 'P3': undefined identifier
+DS12C887.C(36): 错误 C202: 'P2': undefined identifier
+DS12C887.C(42): 错误 C202: 'P1': undefined identifier
+DS12C887.C(43): 错误 C202: 'P1': undefined identifier
+DS12C887.C(44): 错误 C202: 'P1': undefined identifier
+DS12C887.C(46): 错误 C202: 'P2': undefined identifier
+DS12C887.c(77): 警告 C318: can't open file 'define.h'
+DS12C887.c(78): 警告 C318: can't open file '1602.h'
+DS12C887.c(79): 警告 C318: can't open file 'keyscan.h'
+DS12C887.c(80): 警告 C318: can't open file 'ds18b20.h'
+DS12C887.C(85): 错误 C202: 'dscs': undefined identifier
+DS12C887.C(86): 错误 C202: 'dsas': undefined identifier
+DS12C887.C(87): 错误 C202: 'dsds': undefined identifier
+DS12C887.C(88): 错误 C202: 'dsrw': undefined identifier
+DS12C887.C(90): 错误 C202: 'dsas': undefined identifier
+DS12C887.C(91): 错误 C202: 'dsrw': undefined identifier
+DS12C887.C(93): 错误 C202: 'dsrw': undefined identifier
+DS12C887.C(94): 错误 C202: 'dscs': undefined identifier
+DS12C887.C(95): 错误 C202: 'dsas': undefined identifier
+DS12C887.C(101): 错误 C202: 'dscs': undefined identifier
+DS12C887.C(102): 错误 C202: 'dsas': undefined identifier
+DS12C887.C(103): 错误 C202: 'dsrw': undefined identifier
+DS12C887.C(104): 错误 C202: 'dsds': undefined identifier
+DS12C887.C(106): 错误 C202: 'dsas': undefined identifier
+DS12C887.C(107): 错误 C202: 'dsds': undefined identifier
+DS12C887.C(110): 错误 C202: 'dsds': undefined identifier
+DS12C887.C(111): 错误 C202: 'dsas': undefined identifier
+DS12C887.C(112): 错误 C202: 'dscs': undefined identifier
+DS12C887.C(119): 错误 C202: 'lcden': undefined identifier
+DS12C887.C(177): 错误 C202: 'beep': undefined identifier
+DS12C887.C(179): 错误 C202: 'beep': undefined identifier
+DS12C887.c - 33 个错误, 4 个警告。
+创建目标 '目标 1'
+编译 DS12C887.c ...
+DS12C887.c(6): 警告 C318: can't open file 'define.h'
+DS12C887.c(7): 警告 C318: can't open file '1602.h'
+DS12C887.c(8): 警告 C318: can't open file 'keyscan.h'
+DS12C887.c(9): 警告 C318: can't open file 'ds18b20.h'
+连接 ...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_WRITE_DS?DS12C887
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _WRITE_DATE
+    MODULE:  DS12C887.obj (DS12C887)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  LCDWRITE_CGRAM
+    MODULE:  DS12C887.obj (DS12C887)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _WRITE_SFM
+    MODULE:  DS12C887.obj (DS12C887)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _DISPLAY_DS18B20
+    MODULE:  DS12C887.obj (DS12C887)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _WRITE_NYR
+    MODULE:  DS12C887.obj (DS12C887)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  KEY_SCAN
+    MODULE:  DS12C887.obj (DS12C887)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _WRITE_XQ
+    MODULE:  DS12C887.obj (DS12C887)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  GET_TEM
+    MODULE:  DS12C887.obj (DS12C887)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0018H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 001DH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0022H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0027H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0034H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 003DH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_DATE
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0042H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  LCDWRITE_CGRAM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0045H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 004AH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_DATE
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0064H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0074H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_DATE
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 008EH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 009EH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_DATE
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 00A3H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_DATE
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 00A8H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 00ADH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_DATE
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 00B2H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_COM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 00B7H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_DATE
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 00BCH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_DATE
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 00C1H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_SFM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 01BFH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_SFM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 01CDH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_SFM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 01DBH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_XQ
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 01FAH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_NYR
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0201H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_NYR
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0208H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _WRITE_NYR
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 020FH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  KEY_SCAN
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0233H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  GET_TEM
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0245H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _DISPLAY_DS18B20
+    MODULE:  DS12C887.obj (DS12C887)
+    ADDRESS: 0248H
+Program Size: data=28.2 xdata=0 code=690
+创建 HEX 文件 "DS12C887测试" ...
+"DS12C887测试" - 0 个错误, 44 个警告。
+编译 DS12C887.c ...
+DS12C887.c(6): 警告 C318: can't open file 'define.h'
+DS12C887.c(7): 警告 C318: can't open file '1602.h'
+DS12C887.c(8): 警告 C318: can't open file 'keyscan.h'
+DS12C887.c(9): 警告 C318: can't open file 'ds18b20.h'
+DS12C887.c - 0 个错误, 4 个警告。
+编译 DS12C887.c ...
+DS12C887.c - 0 个错误, 0 个警告。
+编译 DS12C887.c ...
+DS12C887.c - 0 个错误, 0 个警告。
+创建目标 '目标 1'
+编译 DS12C887.c ...
+连接 ...
+Program Size: data=24.2 xdata=0 code=1584
+创建 HEX 文件 "DS12C887测试" ...
+"DS12C887测试" - 0 个错误, 0 个警告。
+</pre>
+</body>
+</html>
